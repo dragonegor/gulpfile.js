@@ -20,7 +20,7 @@ var path = {
         source: {                           //Path to folders with working files
             html: 'app/*.html',             
             js: 'app/js/**/*.js',         
-            style: 'app/css/style.css',
+            style: 'app/css/*.css',
             img: 'app/img/**/*.*',          
             fonts: 'app/fonts/**/*.*'
         },
@@ -36,11 +36,11 @@ function html() {                           //HTML file assembly
 
 function css() {                            //CSS file assembly
     return src(path.source.style)
+        .pipe(maps.init())
         .pipe(prefixer({
             browsers: ['last 2 versions']
         }))
         .pipe(concat('style-all.css'))
-        .pipe(maps.init())
         .pipe(cleancss({level :2}))
         .pipe(maps.write())
         .pipe(dest(path.build.style))
@@ -49,8 +49,8 @@ function css() {                            //CSS file assembly
 
 function js() {                             //JS file assembly
     return src(path.source.js)
-        .pipe(concat('main.js'))
         .pipe(maps.init())
+        .pipe(concat('main.js'))
         .pipe(uglify())
         .pipe(maps.write())
         .pipe(dest(path.build.js))
